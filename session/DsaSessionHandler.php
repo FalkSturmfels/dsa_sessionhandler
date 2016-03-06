@@ -6,7 +6,7 @@
  * Date: 20.01.2016
  * Time: 12:49
  */
-class CoreSessionHandler
+class DsaSessionHandler
 {
     private $expireTime = 1800;
 
