@@ -6,18 +6,24 @@
  * Date: 20.01.2016
  * Time: 12:49
  */
-class DsaSessionHandler
+class SimpleSessionHandler
 {
+    /**
+     * @var int session expire time in seconds
+     */
     private $expireTime = 1800;
 
     public function startSession()
     {
         session_start();
-
-        $this->regenerateSession();
         $this->checkLastActivity();
     }
 
+    /**
+     * Checks if the last user activity was more than $expireTime seconds ago.
+     * If it is, the session will be destroyed, otherwise the session will be regenerated and
+     * the last activity time will be set new.
+     */
     private function checkLastActivity()
     {
         if (isset($_SESSION["LAST_ACTIVITY"]) && time() - $_SESSION["LAST_ACTIVITY"] > $this->expireTime)
@@ -27,21 +33,8 @@ class DsaSessionHandler
         }
         else
         {
+            session_regenerate_id(true);
             $_SESSION["LAST_ACTIVITY"] = time();
-        }
-    }
-
-    private function regenerateSession()
-    {
-        if (!isset($_SESSION['CREATED']))
-        {
-            $_SESSION['CREATED'] = time();
-        }
-        else if (time() - $_SESSION['CREATED'] > 1800)
-        {
-            // session started more than 30 minutes ago
-            session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
-            $_SESSION['CREATED'] = time();  // update creation time
         }
     }
 }
